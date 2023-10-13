@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # ====================
-# EEL5713 Lab2 Part3
-#   Mesh Topology
+# EEL5713 Lab2 Part1
+#  Linear Topology
 # ====================
 # Author: Yuxuan Zhang
 
@@ -53,9 +53,8 @@ for i in range(N):
 # Loop to connect switches in a mesh
 info("Connecting switches")
 for i in range(0, N - 1):
-    for j in range(i + 1, N):
-        mn.addLink(switches[i], switches[j])
-        print(f"[LINK]", switches[i], "<->", switches[j])
+        mn.addLink(switches[i], switches[i + 1])
+        print(f"[LINK]", switches[i], "<->", switches[i + 1])
 
 # Start emulation
 info("Starting mininet emulation")
@@ -66,21 +65,18 @@ info("Running pingall test")
 mn.pingAll()
 
 # QPerf test
-for i in range(0, N - 1):
-    for j in range(i + 1, N):
-        server, client = hosts[i], hosts[j]
-        server_ip, _ = addresses[0]
+server, client = hosts[0], hosts[-1]
+server_ip, _ = addresses[0]
 
-        # info(f"Starting qperf server on {server}")
-        server.cmd("qperf &")
-        print()
+# info(f"Starting qperf server on {server}")
+server.cmd("qperf &")
+print()
 
-        info(f"Testing TCP latency from {client} to {server}")
-        print(client.cmd("qperf", "-vvs", server_ip, "tcp_lat"))
+info(f"Testing TCP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "tcp_lat"))
 
-        info(f"Testing UDP latency from {client} to {server}")
-        print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
-
+info(f"Testing UDP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
 # Enter CLI (only in interactive mode)
 if args.interactive:
     info("Entering CLI", False)
