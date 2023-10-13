@@ -47,7 +47,7 @@ Yumeng Zhang, Yuxuan Zhang, Xiyun Guo
 + Usage:
 
     ```sh
-    sudo ./linear.py
+    sudo ./mesh.py
     # optional:
     #   -N <number of nodes>
     #   --interactive
