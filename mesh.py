@@ -6,10 +6,9 @@
 # Author: Yuxuan Zhang
 import argparse
 from mininet.net import Mininet
-from mininet.link import Link
-from mininet.node import Host, OVSSwitch, Controller
 from mininet.clean import cleanup
 
+cleanup()
 # Argument to specify the number of hosts
 parser = argparse.ArgumentParser()
 parser.add_argument("--num-hosts", "-N", type=int, default=5)
@@ -64,6 +63,19 @@ mn.start()
 # Ping test
 info("Running pingall test")
 mn.pingAll()
+
+# QPerf test
+server, client = hosts[0], hosts[-1]
+server_ip, _ = addresses[0]
+
+info(f"Starting qperf server on {server}")
+server.cmd("qperf &")
+
+info(f"Testing TCP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "tcp_lat"))
+
+info(f"Testing UDP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
 
 # Enter CLI (only in interactive mode)
 if args.interactive:
