@@ -34,7 +34,7 @@ mn = Mininet()
 hosts = []
 switches = []
 addresses = []
-controller = Controller("c0", inNamespace=False)
+controller = mn.addController("controller")
 
 # Loop to create hosts, each with a dedicated switch
 info("Creating hosts and switches")
@@ -59,7 +59,6 @@ for i in range(0, N - 1):
 
 # Start emulation
 info("Starting mininet emulation")
-controller = mn.addController("controller")
 mn.start()
 
 # Ping test
