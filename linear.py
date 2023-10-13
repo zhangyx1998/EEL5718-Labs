@@ -28,7 +28,7 @@ def info(msg=None, wait_key=args.interactive):
         print(CYAN + "[INFO]", msg, end=RST + "\n")
 
 
-info(f"Creating mesh topo with {N} hosts.", False)
+info(f"Creating linear topo with {N} hosts.", False)
 mn = Mininet()
 # List of all objects
 hosts = []
