@@ -71,7 +71,7 @@ for i in range(0, N - 1):
         server, client = hosts[i], hosts[j]
         server_ip, _ = addresses[0]
 
-        # info(f"Starting qperf server on {server}")
+        info(f"Starting qperf server on {server}")
         server.cmd("qperf &")
         print()
 

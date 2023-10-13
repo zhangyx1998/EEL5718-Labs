@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ====================
-# EEL5713 Lab2 Part1
+# EEL5713 Lab2 Part3
 #  Linear Topology
 # ====================
 # Author: Yuxuan Zhang

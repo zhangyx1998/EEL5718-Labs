@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ====================
-# EEL5713 Lab2 Part2
+# EEL5713 Lab2 Part3
 #   Tree Topology
 # ====================
 # Author: Yumeng Zhang
