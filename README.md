@@ -3,7 +3,7 @@ Yumeng Zhang, Yuxuan Zhang, Xiyun Guo
 
 ## Video recordings are uploaded to "releases"
 
-#### >>> [LINK TO RECORDINGS AND DRAWINGS](./releases/tag/Lab2-Submission-1) <<<
+#### >>> [LINK TO RECORDINGS AND DRAWINGS](https://github.com/zhangyx1998/EEL5718-Labs/releases/tag/Lab2-Submission-1) <<<
 
 ##  [`Linear`](linear.py) Topology - Xiyun Guo
 
