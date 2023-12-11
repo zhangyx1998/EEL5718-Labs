@@ -1,54 +1,63 @@
 #!/usr/bin/python3
-# ====================
-# EEL5713 Lab2 Part3
-#   Tree Topology
-# ====================
-# Author: Yumeng Zhang
+# =====================
+# EEL5713 Final Project
+#  ______ Topology
+# =====================
+# Author: _________
 
-from mininet.topo import Topo
+from __init__ import N, INTERACTIVE, info
+from mininet.net import Mininet
 
-class MyTreeTopo(Topo):
-    "Simple topology example."
+info(f"Creating linear topo with {N} hosts.", False)
+mn = Mininet()
+# List of all objects
+hosts = []
+switches = []
+addresses = []
+controller = mn.addController("controller")
 
-    def __init__(self):
-        "Create custom topo."
-        # Initialize topology
-        super().__init__()
+# Loop to create hosts, each with a dedicated switch
+info("Creating hosts and switches")
+for i in range(N):
+    host = mn.addHost(f"h{i+1}", inNamespace=False)
+    hosts.append(host)
+    switch = mn.addSwitch(f"s{i+1}", stp=True, inNamespace=False)
+    switches.append(switch)
+    mn.addLink(host, switch)
+    ip = f"10.0.0.{i+1}"
+    mask = "24"
+    addresses.append([ip, mask])
+    host.setIP("/".join([ip, mask]))
+    print(f"[INIT]", f"{host}@{ip}", "->", switch)
 
-        # Add hosts and switches
-        h1 = self.addHost('h1')
-        h2 = self.addHost('h2')
-        h3 = self.addHost('h3')
-        h4 = self.addHost('h4')
-        h5 = self.addHost('h5')
-        h6 = self.addHost('h6')
-        h7 = self.addHost('h7')
-        h8 = self.addHost('h8')
-        s1 = self.addSwitch('s1')
-        s2_1 = self.addSwitch('s2_1')
-        s2_2 = self.addSwitch('s2_2')
-        s3_1 = self.addSwitch('s3_1')
-        s3_2 = self.addSwitch('s3_2')
-        s4_1 = self.addSwitch('s4_1')
-        s4_2 = self.addSwitch('s4_2')
+# Loop to connect switches in a mesh
+info("Connecting switches")
+for i in range(0, N - 1):
+        mn.addLink(switches[i], switches[i + 1])
+        print(f"[LINK]", switches[i], "<->", switches[i + 1])
 
+# Start emulation
+info("Starting mininet emulation")
+mn.start()
 
-        # Add links
-        self.addLink(s1, s2_1)
-        self.addLink(s1, s2_2)
-        self.addLink(s2_1, h1)
-        self.addLink(s2_1, h2)
-        self.addLink(s2_2, s3_1)
-        self.addLink(s2_2, s3_2)
-        self.addLink(s3_1, h3)
-        self.addLink(s3_1, h4)
-        self.addLink(s3_2, s4_1)
-        self.addLink(s3_2, s4_2)
-        self.addLink(s4_1, h5)
-        self.addLink(s4_1, h6)
-        self.addLink(s4_2, h7)
-        self.addLink(s4_2, h8)
-        
+# Ping test
+info("Running pingAll test")
+mn.pingAll()
 
-topos = {'mytreetopo': (lambda: MyTreeTopo())}
+# QPerf test
+server, client = hosts[0], hosts[-1]
+server_ip, _ = addresses[0]
 
+# info(f"Starting qperf server on {server}")
+server.cmd("qperf &")
+print()
+
+info(f"Testing TCP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "tcp_lat"))
+
+info(f"Testing UDP latency from {client} to {server}")
+print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
+# Enter CLI (only in interactive mode)
+if INTERACTIVE:
+    info("Entering CLI", False)
+    mn.interact()

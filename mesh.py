@@ -1,32 +1,12 @@
 #!/usr/bin/python3
-# ====================
-# EEL5713 Lab2 Part3
-#   Mesh Topology
-# ====================
-# Author: Yuxuan Zhang
+# =====================
+# EEL5713 Final Project
+#  ______ Topology
+# =====================
+# Author: _________
 
-import argparse
+from __init__ import N, INTERACTIVE, info
 from mininet.net import Mininet
-from mininet.clean import cleanup
-
-cleanup()
-# Argument to specify the number of hosts
-parser = argparse.ArgumentParser()
-parser.add_argument("--num-hosts", "-N", type=int, default=5)
-parser.add_argument("--interactive", action="store_true", default=False)
-args = parser.parse_args()
-N = args.num_hosts
-
-
-def info(msg=None, wait_key=args.interactive):
-    CYAN = "\033[96m"
-    RST = "\033[0m"
-    if wait_key:
-        msg = "Press ENTER to continue ..." if msg is None else msg
-        input(CYAN + f"[INFO] {msg} ..." + RST)
-    elif msg is not None:
-        print(CYAN + "[INFO]", msg, end=RST + "\n")
-
 
 info(f"Creating mesh topo with {N} hosts.", False)
 mn = Mininet()
@@ -82,10 +62,7 @@ for i in range(0, N - 1):
         print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
 
 # Enter CLI (only in interactive mode)
-if args.interactive:
+if INTERACTIVE:
     info("Entering CLI", False)
     mn.interact()
 
-# Cleanup and exit
-info("Cleaning up and exiting")
-cleanup()
