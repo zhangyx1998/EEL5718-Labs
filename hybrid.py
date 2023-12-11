@@ -1,17 +1,22 @@
 #!/usr/bin/python3
 # =====================
 # EEL5713 Final Project
-#  ______ Topology
+#   Hybrid Topology
 # =====================
-# Author: _________
 from __init__ import mn, N, H, info, create, run_tests
 
-info(f"Creating linear topology with {N} switches, {H} hosts per switch.", False)
+import linear
+import ring
+import star
+import tree
+import mesh
 
-info("Creating hosts and switches")
-hosts, switches = create()
+# Connect all subnets to a central switch
+[hybrid_central], _ = create(1, 0, prefix="hybrid")
+for subnet in (linear, mesh, ring, star, tree):
+    switch = subnet.switches[0]
+    mn.addLink(hybrid_central, switch)
+    print(f"[LINK]", hybrid_central, "<->", switch)
 
-info("Connecting switches")
-# TODO: Implement your topology here
-
-run_tests(hosts[0], hosts[-1])
+if __name__ == "__main__":
+    run_tests(tree.hosts[-1], star.hosts[-1])

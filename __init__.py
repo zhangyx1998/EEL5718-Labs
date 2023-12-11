@@ -24,7 +24,7 @@ parser.add_argument("--hosts-per-switch", "-H", type=int, default=2)
 parser.add_argument("--interactive", action="store_true", default=False)
 args = parser.parse_args()
 N = args.num_switches
-H = args.num_switches
+H = args.hosts_per_switch
 
 
 def info(msg=None, wait_key=args.interactive):
@@ -70,8 +70,8 @@ def new_switch(prefix = None):
 
 def create(num_switches = N, hosts_per_switch=2, prefix = None):
     # Create switches
-    hosts = []
     switches = []
+    hosts = []
     for _ in range(num_switches):
         s = new_switch(prefix)
         switches.append(s)
@@ -80,7 +80,7 @@ def create(num_switches = N, hosts_per_switch=2, prefix = None):
             h = new_host(prefix, s)
             hosts.append(h)
 
-    return hosts, switches
+    return switches, hosts
 
 def run_tests(server, client):
     # Start emulation
