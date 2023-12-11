@@ -4,60 +4,16 @@
 #  ______ Topology
 # =====================
 # Author: _________
+from __init__ import mn, N, H, info, create, run_tests
 
-from __init__ import N, INTERACTIVE, info
-from mininet.net import Mininet
+info(f"Creating linear topology with {N} switches, {H} hosts per switch.", False)
 
-info(f"Creating linear topo with {N} hosts.", False)
-mn = Mininet()
-# List of all objects
-hosts = []
-switches = []
-addresses = []
-controller = mn.addController("controller")
-
-# Loop to create hosts, each with a dedicated switch
 info("Creating hosts and switches")
-for i in range(N):
-    host = mn.addHost(f"h{i+1}", inNamespace=False)
-    hosts.append(host)
-    switch = mn.addSwitch(f"s{i+1}", stp=True, inNamespace=False)
-    switches.append(switch)
-    mn.addLink(host, switch)
-    ip = f"10.0.0.{i+1}"
-    mask = "24"
-    addresses.append([ip, mask])
-    host.setIP("/".join([ip, mask]))
-    print(f"[INIT]", f"{host}@{ip}", "->", switch)
+hosts, switches = create()
 
-# Loop to connect switches in a mesh
 info("Connecting switches")
-for i in range(0, N - 1):
-        mn.addLink(switches[i], switches[i + 1])
-        print(f"[LINK]", switches[i], "<->", switches[i + 1])
+for s1, s2 in zip(switches, [*switches[1:], switches[0]]):
+    mn.addLink(s1, s2)
+    print(f"[LINK]", s1, "<->", s2)
 
-# Start emulation
-info("Starting mininet emulation")
-mn.start()
-
-# Ping test
-info("Running pingAll test")
-mn.pingAll()
-
-# QPerf test
-server, client = hosts[0], hosts[-1]
-server_ip, _ = addresses[0]
-
-# info(f"Starting qperf server on {server}")
-server.cmd("qperf &")
-print()
-
-info(f"Testing TCP latency from {client} to {server}")
-print(client.cmd("qperf", "-vvs", server_ip, "tcp_lat"))
-
-info(f"Testing UDP latency from {client} to {server}")
-print(client.cmd("qperf", "-vvs", server_ip, "udp_lat"))
-# Enter CLI (only in interactive mode)
-if INTERACTIVE:
-    info("Entering CLI", False)
-    mn.interact()
+run_tests(hosts[0], hosts[-1])
