@@ -4,7 +4,7 @@
 #  Star Topology
 # =====================
 prefix = None if __name__ == "__main__" else "star"
-from __init__ import mn, N, H, info, create, run_tests
+from __init__ import link, N, H, info, create, run_tests
 
 info(f"Creating linear topology with {N} switches, {H} hosts per switch.", False)
 
@@ -14,8 +14,8 @@ switches, hosts = create(prefix=prefix)
 
 info("Connecting switches")
 for s in switches:
-    mn.addLink(central_switch, s)
+    link(central_switch, s)
     print(f"[LINK]", central_switch, "<->", s)
 
 if __name__ == "__main__":
-    run_tests(hosts[0], hosts[-1])
+    run_tests(__file__.replace(".py", ".txt"))

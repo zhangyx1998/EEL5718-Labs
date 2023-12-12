@@ -4,7 +4,7 @@
 #    Tree Topology
 # =====================
 prefix = None if __name__ == "__main__" else "tree"
-from __init__ import mn, N, H, info, create, run_tests
+from __init__ import link, N, H, info, create, run_tests
 
 info(f"Creating tree topology with {N} switches, {H} hosts per switch.", False)
 total = 1
@@ -28,7 +28,7 @@ while total < N:
         next_layer, hosts = create(n, prefix=prefix)
     # Connect to previous layer
     for i, s in enumerate(next_layer):
-        mn.addLink(s, layer[i // 2])
+        link(s, layer[i // 2])
         print(f"[LINK]", s, "<->", layer[i // 2])
     switches += layer
     layer = next_layer
@@ -37,4 +37,4 @@ while total < N:
 switches += layer
 
 if __name__ == "__main__":
-    run_tests(hosts[0], hosts[-1])
+    run_tests(__file__.replace(".py", ".txt"))
